@@ -1,19 +1,19 @@
 # AmpKit
 
-Bộ công cụ Skills cho AI Agent sử dụng [Amp](https://ampcode.com). Tập trung vào workflow planning và multi-agent orchestration với Beads task management system.
+A Skills toolkit for AI Agents using [Amp](https://ampcode.com). Focused on workflow planning and multi-agent orchestration with Beads task management system.
 
-## 📦 Cài đặt
+## 📦 Installation
 
-### Yêu cầu hệ thống
+### System Requirements
 
-- **macOS** hoặc **Linux**
+- **macOS** or **Linux**
 - **Python** >= 3.14
 - **Git**
 - **Homebrew** (macOS)
 
-### 1. Cài đặt Beads
+### 1. Install Beads
 
-[Beads](https://github.com/steveyegge/beads) - Distributed, git-backed graph issue tracker cho AI agents.
+[Beads](https://github.com/steveyegge/beads) - Distributed, git-backed graph issue tracker for AI agents.
 
 ```bash
 # macOS
@@ -23,14 +23,14 @@ brew install steveyegge/beads/bd
 curl -fsSL https://raw.githubusercontent.com/steveyegge/beads/main/scripts/install.sh | bash
 ```
 
-Khởi tạo trong project:
+Initialize in your project:
 ```bash
 bd init
 ```
 
-### 2. Cài đặt Beads Viewer
+### 2. Install Beads Viewer
 
-[Beads Viewer (bv)](https://github.com/Dicklesworthstone/beads_viewer) - Terminal UI cho Beads với graph analytics, AI robot mode.
+[Beads Viewer (bv)](https://github.com/Dicklesworthstone/beads_viewer) - Terminal UI for Beads with graph analytics and AI robot mode.
 
 ```bash
 curl -fsSL "https://raw.githubusercontent.com/Dicklesworthstone/beads_viewer/main/install.sh" | bash
@@ -41,11 +41,11 @@ Verify:
 bv --version
 ```
 
-### 3. Cài đặt MCP Agent Mail
+### 3. Install MCP Agent Mail
 
-[MCP Agent Mail](https://github.com/tuong-nguyen-vn/mcp_agent_mail) - Hệ thống messaging cho multi-agent coordination.
+[MCP Agent Mail](https://github.com/tuong-nguyen-vn/mcp_agent_mail) - Messaging system for multi-agent coordination.
 
-#### Cài đặt Python 3.14+
+#### Install Python 3.14+
 
 ```bash
 # macOS
@@ -57,40 +57,40 @@ sudo apt update
 sudo apt install python3.14 python3.14-venv
 ```
 
-#### Cài đặt uv package manager
+#### Install uv package manager
 
 ```bash
 # Script
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# Hoặc Homebrew
+# Or Homebrew
 brew install uv
 ```
 
-#### Clone và setup
+#### Clone and setup
 
 ```bash
 git clone https://github.com/tuong-nguyen-vn/mcp_agent_mail.git
 cd mcp_agent_mail
 
-# Tạo virtual environment
+# Create virtual environment
 uv venv --python python3.14
 
 # Activate
 source .venv/bin/activate
 
-# Cài dependencies
+# Install dependencies
 uv pip install -e .
 ```
 
-#### Cài đặt global (chọn 1 trong 3)
+#### Global installation (choose 1 of 3)
 
-**Option 1: Symlink (khuyến nghị)**
+**Option 1: Symlink (recommended)**
 ```bash
 sudo ln -sf /path/to/mcp_agent_mail/.venv/bin/am /usr/local/bin/am
 ```
 
-**Option 2: Add vào PATH**
+**Option 2: Add to PATH**
 ```bash
 echo 'export PATH="/path/to/mcp_agent_mail/.venv/bin:$PATH"' >> ~/.zshrc
 source ~/.zshrc
@@ -107,32 +107,32 @@ source ~/.zshrc
 am --help
 ```
 
-## 🎯 Sử dụng với Amp
+## 🎯 Usage with Amp
 
-### Cài Skills vào Amp
+### Install Skills to Amp
 
-Copy thư mục `skills/` vào config của Amp:
+Copy the `skills/` directory to Amp config:
 
 ```bash
 cp -r skills/* ~/.config/amp/skills/
 ```
 
-### Các Skills có sẵn
+### Available Skills
 
-| Skill | Mô tả |
-|-------|-------|
-| `planning` | Pipeline lập kế hoạch feature: Discovery → Synthesis → Verification → Decomposition → Track Planning |
-| `file-beads` | Chuyển đổi plan thành Beads epics và issues với dependencies |
-| `orchestrator` | Điều phối multi-agent bead execution |
+| Skill | Description |
+|-------|-------------|
+| `planning` | Feature planning pipeline: Discovery → Synthesis → Verification → Decomposition → Track Planning |
+| `file-beads` | Convert plans into Beads epics and issues with dependencies |
+| `orchestrator` | Coordinate multi-agent bead execution |
 
-### Workflow cơ bản
+### Basic Workflow
 
-1. **Plan feature mới**
+1. **Plan a new feature**
    ```
-   @amp: Load skill planning và lập kế hoạch cho feature authentication
+   @amp: Load skill planning and create a plan for authentication feature
    ```
 
-2. **Xem beads**
+2. **View beads**
    ```bash
    bv                           # TUI interactive
    bv --robot-triage           # AI-friendly output
@@ -141,7 +141,7 @@ cp -r skills/* ~/.config/amp/skills/
 
 3. **Multi-agent execution**
    ```
-   @amp: Load skill orchestrator để bắt đầu execution
+   @amp: Load skill orchestrator to start execution
    ```
 
 ## 📚 Commands Reference
@@ -149,21 +149,21 @@ cp -r skills/* ~/.config/amp/skills/
 ### Beads (bd)
 
 ```bash
-bd ready                    # List tasks không bị block
-bd create "Title" -p 0      # Tạo P0 task
+bd ready                    # List unblocked tasks
+bd create "Title" -p 0      # Create P0 task
 bd dep add <child> <parent> # Link dependencies
-bd show <id>                # Xem chi tiết task
-bd close <id>               # Đóng task
+bd show <id>                # View task details
+bd close <id>               # Close task
 ```
 
 ### Beads Viewer (bv)
 
 ```bash
 # TUI Mode
-bv                          # Mở interactive viewer
+bv                          # Open interactive viewer
 
-# Robot Mode (cho AI agents)
-bv --robot-triage           # Recommendations với scores
+# Robot Mode (for AI agents)
+bv --robot-triage           # Recommendations with scores
 bv --robot-plan             # Parallel execution tracks
 bv --robot-insights         # Graph metrics
 bv --robot-next             # Single next pick
@@ -177,7 +177,7 @@ bv --export-graph out.html  # Interactive HTML graph
 
 ```bash
 am health_check '{}'                    # Check system
-am ensure_project '{"project": "my-project"}'  # Tạo project
+am ensure_project '{"project": "my-project"}'  # Create project
 am register_agent '{"agent_id": "agent-1", "project": "my-project"}'
 am send_message '{"from": "agent-1", "to": "agent-2", "subject": "...", "body": "..."}'
 am fetch_inbox '{"agent_id": "agent-2"}'
