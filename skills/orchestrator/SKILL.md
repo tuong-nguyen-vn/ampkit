@@ -9,6 +9,38 @@ This skill spawns and monitors parallel worker agents that execute beads autonom
 
 **Prerequisite**: Run the `planning` skill first to generate `history/<feature>/execution-plan.md`.
 
+---
+
+## ⚠️ Critical Rule: Keep Orchestrator Context Clean
+
+**The Orchestrator NEVER performs actual implementation work. It ONLY:**
+- Reads execution plans
+- Spawns worker subagents via `Task()`
+- Monitors progress via Agent Mail
+- Resolves cross-track blockers by messaging workers
+- Announces completion
+
+**ALL actual coding, file editing, testing, and implementation work MUST be delegated to Worker agents.**
+
+This keeps the Orchestrator's context window clean and focused on coordination, preventing context overflow during long-running epics.
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  ORCHESTRATOR (This Agent)                                      │
+│  ✅ Spawn workers     ✅ Monitor inbox    ✅ Send messages      │
+│  ✅ Route blockers    ✅ Track progress   ✅ Announce complete  │
+│  ❌ Edit files        ❌ Run tests        ❌ Write code         │
+│  ❌ Debug issues      ❌ Install deps     ❌ Any implementation │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼ Task() delegates work
+┌─────────────────────────────────────────────────────────────────┐
+│  WORKERS (BlueLake, GreenCastle, RedStone, ...)                 │
+│  ✅ Edit files        ✅ Run tests        ✅ Write code         │
+│  ✅ Debug issues      ✅ Install deps     ✅ All implementation │
+└─────────────────────────────────────────────────────────────────┘
+```
+
 ## Agent Mail CLI
 
 Agent Mail có thể được gọi qua CLI trực tiếp mà không cần MCP server:
