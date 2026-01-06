@@ -374,14 +374,15 @@ bv --robot-plan 2>/dev/null | jq '.plan.unassigned'
 
 ### Tool Selection
 
-| Need               | Tool                                    |
-| ------------------ | --------------------------------------- |
-| Find codebase      | `finder`                                |
-| External patterns  | `librarian`                             |
-| Library docs       | `mcp__exa__get_code_context_exa`        |
-| Gap analysis       | `oracle`                                |
-| Create beads       | `skill("file-beads")` + `bd create`     |
-| Validate graph     | `bv --robot-*`                          |
+| Need                                | Tool                                    |
+| ----------------------------------- | --------------------------------------- |
+| Image, PDF, and media file analysis | `look_at`                               |
+| Find codebase                       | `finder`                                |
+| External patterns                   | `librarian`                             |
+| Library docs                        | `mcp__exa__get_code_context_exa`        |
+| Gap analysis                        | `oracle`                                |
+| Create beads                        | `skill("file-beads")` + `bd create`     |
+| Validate graph                      | `bv --robot-*`                          |
 
 ### Common Mistakes
 
