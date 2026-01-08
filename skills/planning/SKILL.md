@@ -10,17 +10,18 @@ Generate quality plans through systematic discovery, synthesis, verification, an
 ## Pipeline Overview
 
 ```
-USER REQUEST → Discovery → Synthesis → Verification → Decomposition → Validation → Track Planning → Ready Plan
+USER REQUEST → Discovery → Clarification → Synthesis → Verification → Decomposition → Validation → Track Planning → Ready Plan
 ```
 
 | Phase             | Tool                                             | Output                              |
 | ----------------- | ------------------------------------------------ | ----------------------------------- |
 | 1. Discovery      | Parallel sub-agents, finder, Librarian, exa      | Discovery Report                    |
-| 2. Synthesis      | Oracle                                           | Approach + Risk Map                 |
-| 3. Verification   | Spikes via MULTI_AGENT_WORKFLOW                  | Validated Approach + Learnings      |
-| 4. Decomposition  | file-beads skill                                 | .beads/\*.md files                  |
-| 5. Validation     | bv + Oracle                                      | Validated dependency graph          |
-| 6. Track Planning | bv --robot-plan                                  | Execution plan with parallel tracks |
+| 2. Clarification  | Interactive Q&A with user                        | Validated Requirements              |
+| 3. Synthesis      | Oracle                                           | Approach + Risk Map                 |
+| 4. Verification   | Spikes via MULTI_AGENT_WORKFLOW                  | Validated Approach + Learnings      |
+| 5. Decomposition  | file-beads skill                                 | .beads/\*.md files                  |
+| 6. Validation     | bv + Oracle                                      | Validated dependency graph          |
+| 7. Track Planning | bv --robot-plan                                  | Execution plan with parallel tracks |
 
 ## Phase 1: Discovery (Parallel Exploration)
 
@@ -65,7 +66,66 @@ Save to `history/<feature>/discovery.md`:
 - Similar projects: ...
 ```
 
-## Phase 2: Synthesis (Oracle)
+## Phase 2: Clarification (Interactive Q&A)
+
+After Discovery, **MUST** ask user clarifying questions to validate requirements before proceeding. **3-10 questions** depending on complexity.
+
+### Purpose
+
+- Confirm understanding of scope and goals
+- Detect ambiguities or conflicts early
+- Gather critical business context
+- Avoid rework from misunderstood requirements
+
+### Sample Questions (pick relevant ones)
+
+**Scope & Boundaries:**
+- Which existing modules should this integrate with?
+- Any time/resource constraints?
+- What's the MVP scope? What can be deferred?
+
+**Technical Decisions:**
+- Any technology stack preferences? (if multiple options exist)
+- Specific performance requirements? (latency, throughput, etc.)
+- Backward compatibility needed?
+
+**Business Context:**
+- Primary use case users will use most?
+- Special edge cases to handle?
+- Priority between sub-features if trade-offs needed?
+
+**Integration & Dependencies:**
+- External services/APIs to integrate?
+- Current data sources and formats?
+- Authentication/authorization requirements?
+
+**Quality & Constraints:**
+- Testing requirements? (unit, integration, e2e)
+- Error handling expectations?
+- Monitoring/logging needed?
+
+### Question Template
+
+```markdown
+## Clarification Questions
+
+Based on the Discovery Report, I need to clarify a few points before proceeding:
+
+1. **[Scope]**: <question>
+2. **[Technical]**: <question>
+3. **[Business]**: <question>
+...
+
+Please answer each so I can create the most accurate plan.
+```
+
+### Notes
+
+- Prioritize questions with **high impact** on architecture/approach
+- If user is unsure, suggest default option with reasoning
+- Save answers to `history/<feature>/clarification.md`
+
+## Phase 3: Synthesis (Oracle)
 
 Feed Discovery Report to Oracle for gap analysis:
 
@@ -256,7 +316,7 @@ oracle(
 )
 ```
 
-## Phase 6: Track Planning
+## Phase 7: Track Planning
 
 This phase creates an **execution-ready plan** so the orchestrator can spawn workers immediately without re-analyzing beads.
 
@@ -391,3 +451,15 @@ bv --robot-plan 2>/dev/null | jq '.plan.unassigned'
 - **No spikes for HIGH risk** → Blocked workers
 - **Missing learnings in beads** → Workers re-discover same issues
 - **No bv validation** → Broken dependency graph
+
+## ⚠️ Critical Rule: No Nested Subagents
+
+**Workers (subagents) MUST NOT spawn other subagents via `Task()`.**
+
+Allowed tools inside a subagent:
+- ✅ `look_at`, `finder`, `librarian`, `oracle`
+- ✅ `Read`, `Grep`, `edit_file`, `create_file`, `Bash`
+- ✅ All MCP tools
+- ❌ `Task()` - NEVER call Task() inside a Task()
+
+This prevents infinite nesting and context explosion.

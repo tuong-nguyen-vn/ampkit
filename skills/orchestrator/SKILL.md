@@ -24,6 +24,18 @@ This skill spawns and monitors parallel worker agents that execute beads autonom
 
 This keeps the Orchestrator's context window clean and focused on coordination, preventing context overflow during long-running epics.
 
+## ⚠️ Critical Rule: No Nested Subagents
+
+**Workers (subagents) MUST NOT spawn other subagents via `Task()`.**
+
+Allowed tools inside a subagent:
+- ✅ `look_at`, `finder`, `librarian`, `oracle`
+- ✅ `Read`, `Grep`, `edit_file`, `create_file`, `Bash`
+- ✅ All MCP tools, Agent Mail CLI
+- ❌ `Task()` - NEVER call Task() inside a Task()
+
+This prevents infinite nesting and context explosion.
+
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │  ORCHESTRATOR (This Agent)                                      │
