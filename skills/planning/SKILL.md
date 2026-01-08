@@ -23,6 +23,19 @@ USER REQUEST → Discovery → Clarification → Synthesis → Verification → 
 | 6. Validation     | bv + Oracle                                      | Validated dependency graph          |
 | 7. Track Planning | bv --robot-plan                                  | Execution plan with parallel tracks |
 
+## History Folder Naming Convention
+
+Use date prefix format `YYYYMMDD-<feature-name>` for all history folders:
+
+```bash
+# Get current date prefix
+date +%Y%m%d
+# Output: 20260108
+
+# Create history folder
+mkdir -p "history/$(date +%Y%m%d)-<feature-name>"
+```
+
 ## Phase 1: Discovery (Parallel Exploration)
 
 Launch parallel sub-agents to gather codebase intelligence:
@@ -37,7 +50,7 @@ exa → Library docs (if external integration needed)
 
 ### Discovery Report Template
 
-Save to `history/<feature>/discovery.md`:
+Save to `history/YYYYMMDD-<feature>/discovery.md` (e.g., `history/20260108-user-auth/discovery.md`):
 
 ```markdown
 # Discovery Report: <Feature Name>
@@ -123,7 +136,7 @@ Please answer each so I can create the most accurate plan.
 
 - Prioritize questions with **high impact** on architecture/approach
 - If user is unsure, suggest default option with reasoning
-- Save answers to `history/<feature>/clarification.md`
+- Save answers to `history/YYYYMMDD-<feature>/clarification.md`
 
 ## Phase 3: Synthesis (Oracle)
 
@@ -133,7 +146,7 @@ Feed Discovery Report to Oracle for gap analysis:
 oracle(
   task: "Analyze gap between current codebase and feature requirements",
   context: "Discovery report attached. User wants: <feature>",
-  files: ["history/<feature>/discovery.md"]
+  files: ["history/YYYYMMDD-<feature>/discovery.md"]
 )
 ```
 
@@ -164,7 +177,7 @@ Blast radius >5 files? ─── YES → HIGH
                        └── NO  → MEDIUM
 ```
 
-Save to `history/<feature>/approach.md`:
+Save to `history/YYYYMMDD-<feature>/approach.md`:
 
 ```markdown
 # Approach: <Feature Name>
@@ -242,7 +255,7 @@ Use the MULTI_AGENT_WORKFLOW:
 oracle(
   task: "Synthesize spike results and update approach",
   context: "Spikes completed. Results: ...",
-  files: ["history/<feature>/approach.md"]
+  files: ["history/YYYYMMDD-<feature>/approach.md"]
 )
 ```
 
@@ -350,7 +363,7 @@ Assign unique adjective+noun names to each track:
 
 ### Step 4: Create Execution Plan
 
-Save to `history/<feature>/execution-plan.md`:
+Save to `history/YYYYMMDD-<feature>/execution-plan.md`:
 
 ```markdown
 # Execution Plan: <Feature Name>
@@ -423,12 +436,12 @@ bv --robot-plan 2>/dev/null | jq '.plan.unassigned'
 
 | Artifact          | Location                              | Purpose                            |
 | ----------------- | ------------------------------------- | ---------------------------------- |
-| Discovery Report  | `history/<feature>/discovery.md`      | Codebase snapshot                  |
-| Approach Document | `history/<feature>/approach.md`       | Strategy + risks                   |
+| Discovery Report  | `history/YYYYMMDD-<feature>/discovery.md`      | Codebase snapshot                  |
+| Approach Document | `history/YYYYMMDD-<feature>/approach.md`       | Strategy + risks                   |
 | Spike Code        | `.spikes/<feature>/`                  | Reference implementations          |
 | Spike Learnings   | Embedded in beads                     | Context for workers                |
 | Beads             | `.beads/*.md`                         | Executable work items              |
-| Execution Plan    | `history/<feature>/execution-plan.md` | Track assignments for orchestrator |
+| Execution Plan    | `history/YYYYMMDD-<feature>/execution-plan.md` | Track assignments for orchestrator |
 
 ## Quick Reference
 
