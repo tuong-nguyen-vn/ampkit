@@ -38,15 +38,20 @@ mkdir -p "history/$(date +%Y%m%d)-<feature-name>"
 
 ## Phase 1: Discovery (Parallel Exploration)
 
-Launch parallel sub-agents to gather codebase intelligence:
+Gather codebase intelligence using available tools:
 
 ```
-Task() → Agent A: Architecture snapshot (finder)
+Task() → Agent A: Architecture snapshot
 Task() → Agent B: Pattern search (find similar existing code)
 Task() → Agent C: Constraints (package.json, tsconfig, deps)
+finder → Search codebase by concept/functionality
+finder → Find existing patterns and conventions
+finder → Locate related modules and dependencies
 Librarian → External patterns ("how do similar projects do this?")
 exa → Library docs (if external integration needed)
 ```
+
+Choose tools based on codebase size and complexity. Can use `finder` directly or spawn `Task()` subagents for parallel exploration.
 
 ### Discovery Report Template
 
@@ -339,7 +344,29 @@ This phase creates an **execution-ready plan** so the orchestrator can spawn wor
 bv --robot-plan 2>/dev/null | jq '.plan.tracks'
 ```
 
-### Step 2: Assign File Scopes
+### Step 2: Validate Track Size
+
+**⚠️ Critical: Prevent subagent context overflow**
+
+| Constraint | Limit | Action if exceeded |
+|------------|-------|-------------------|
+| Beads per track | **Max 2-3** | Split into sub-tracks |
+| Files per bead | **Max 10** | Split bead or isolate to own track |
+| Complex beads | 1 bead touching >10 files | Assign to dedicated track |
+
+**Split strategy:**
+```
+Track 1 (5 beads) → Too large!
+├── Track 1a: bead-1 → bead-2
+├── Track 1b: bead-3 → bead-4
+└── Track 1c: bead-5
+```
+
+**Cross-dependency handling:**
+- If Track 1b depends on Track 1a completion, add explicit cross-track dependency
+- Sub-tracks can share file scope (same agent context, sequential execution)
+
+### Step 3: Assign File Scopes
 
 For each track, determine the file scope based on beads in that track:
 
@@ -350,18 +377,18 @@ bd show <bead-id>  # Look at description for file hints
 
 **Rules:**
 
-- File scopes must NOT overlap between tracks
+- File scopes must NOT overlap between tracks (except sub-tracks from same parent)
 - Use glob patterns: `packages/sdk/**`, `apps/server/**`
 - If overlap unavoidable, merge into single track
 
-### Step 3: Generate Agent Names
+### Step 4: Generate Agent Names
 
 Assign unique adjective+noun names to each track:
 
 - BlueLake, GreenCastle, RedStone, PurpleBear, etc.
 - Names are memorable identifiers, NOT role descriptions
 
-### Step 4: Create Execution Plan
+### Step 5: Create Execution Plan
 
 Save to `history/YYYYMMDD-<feature>/execution-plan.md`:
 

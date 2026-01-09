@@ -539,6 +539,60 @@ For EACH bead in your track:
 | Release files | `am release_file_reservations '{"project_key": "<path>", "agent_name": "Agent"}'` |
 | Reply message | `am reply_message '{"project_key": "<path>", "message_id": 123, "sender_name": "Agent", "body_md": "..."}'` |
 | Health check | `am health_check '{}'` |
+| Contact handshake | `am macro_contact_handshake '{\"project_key\": \"<path>\", \"requester\": \"Agent1\", \"target\": \"Agent2\", \"auto_accept\": true}'` |
+
+---
+
+## ⚠️ Contact Approval Required
+
+**Before sending messages to another agent, you MUST establish contact first:**
+
+```bash
+# Orchestrator must run handshake for ALL worker agents before spawning
+am macro_contact_handshake '{
+  "project_key": "<path>",
+  "requester": "<OrchestratorName>",
+  "target": "BlueLake",
+  "auto_accept": true
+}'
+am macro_contact_handshake '{
+  "project_key": "<path>",
+  "requester": "<OrchestratorName>",
+  "target": "GreenCastle",
+  "auto_accept": true
+}'
+# ... repeat for all workers
+```
+
+**Workers sending messages to each other also need handshake first:**
+```bash
+am macro_contact_handshake '{
+  "project_key": "<path>",
+  "requester": "BlueLake",
+  "target": "GreenCastle",
+  "auto_accept": true
+}'
+```
+
+**Note:** `macro_contact_handshake` requires active agent context (MCP or Task prompt).
+
+**If running from external terminal (no context), use 2-step workaround:**
+```bash
+# Step 1: Request contact (from sender's perspective)
+am request_contact '{
+  "project_key": "<path>",
+  "from_agent": "BlueLake",
+  "to_agent": "GreenCastle"
+}'
+
+# Step 2: Approve contact (from target's perspective)  
+am respond_contact '{
+  "project_key": "<path>",
+  "from_agent": "BlueLake",
+  "to_agent": "GreenCastle",
+  "accept": true
+}'
+```
 
 ---
 
