@@ -43,13 +43,14 @@
 
 | Skill | Description |
 |:------|:------------|
+| `docs-init` | Initialize documentation for new codebases by scanning and analyzing architecture |
+| `brainstorming` | Collaborative solution brainstorming with brutal honesty, multi-approach analysis |
 | `planning` | Generate comprehensive plans through discovery, synthesis, verification, and decomposition |
 | `file-beads` | Convert plans into structured Beads issues with proper dependencies |
 | `orchestrator` | Plan and coordinate multi-agent bead execution with parallel workers |
 | `worker` | Execute beads autonomously within a track with context persistence via Agent Mail |
-| `knowledge` | Extract knowledge from Amp threads and update project documentation |
-| `docs-init` | Initialize documentation for new codebases by scanning and analyzing architecture |
 | `issue-resolution` | Systematically diagnose and fix bugs through triage, reproduction, root cause analysis |
+| `knowledge` | Extract knowledge from Amp threads and update project documentation |
 
 ## Installation
 
@@ -68,13 +69,14 @@ amp skill add TNVibeSolutions/ampkit --overwrite --target ~/.config/amp/skills/
 ### Install Specific Skills
 
 ```bash
+amp skill add TNVibeSolutions/ampkit/docs-init
+amp skill add TNVibeSolutions/ampkit/brainstorming
 amp skill add TNVibeSolutions/ampkit/planning
+amp skill add TNVibeSolutions/ampkit/file-beads
 amp skill add TNVibeSolutions/ampkit/orchestrator
 amp skill add TNVibeSolutions/ampkit/worker
 amp skill add TNVibeSolutions/ampkit/issue-resolution
 amp skill add TNVibeSolutions/ampkit/knowledge
-amp skill add TNVibeSolutions/ampkit/docs-init
-amp skill add TNVibeSolutions/ampkit/file-beads
 ```
 
 ## Usage Guide
@@ -116,7 +118,19 @@ For new projects, use `docs-init` to generate initial documentation:
 Use docs-init skill to initialize documentation for this project
 ```
 
-#### 2️⃣ Plan Feature
+#### 3️⃣ Brainstorm Ideas (Optional)
+
+Before planning, use `brainstorming` skill to explore approaches:
+
+```
+Use brainstorming skill to explore: [problem/idea description]
+```
+
+- Provides multi-angle analysis with pros/cons
+- Gives honest recommendations based on engineering principles
+- Helps clarify requirements before formal planning
+
+#### 4️⃣ Plan Feature
 
 Open a new session in **Smart mode** and use `planning` skill:
 
@@ -129,7 +143,7 @@ Use planning skill to plan feature: [feature description]
 - Use `bv` CLI to preview created tasks
 - When planning is complete, **handoff** to a new thread
 
-#### 3️⃣ Execute Feature
+#### 5️⃣ Execute Feature
 
 In the new thread, call `orchestrator` skill:
 
@@ -143,7 +157,7 @@ The orchestrator will:
 - Coordinate workers in parallel or sequential execution
 - Track progress and handle dependencies automatically
 
-#### 4️⃣ Test & Fix Issues
+#### 6️⃣ Test & Fix Issues
 
 After completion, test thoroughly:
 
@@ -156,7 +170,7 @@ After completion, test thoroughly:
 Use issue-resolution skill to debug error: [error description]
 ```
 
-#### 6️⃣ Update Documentation
+#### 7️⃣ Update Documentation
 
 After each feature, sync documentation with `knowledge` skill:
 
@@ -170,13 +184,14 @@ Use knowledge skill to update docs with recent changes
 
 | # | Skill | Purpose |
 |:-:|:------|:--------|
-| 1 | **planning** | Creates execution plans with beads, tracks, and dependencies |
-| 2 | **file-beads** | Converts plans into structured Beads issues |
-| 3 | **orchestrator** | Spawns parallel worker agents and monitors progress |
-| 4 | **worker** | Executes beads within assigned tracks using Agent Mail |
-| 5 | **knowledge** | Extracts learnings from threads and updates documentation |
-| 6 | **docs-init** | Initializes documentation for new codebases |
+| 1 | **docs-init** | Initializes documentation for new codebases |
+| 2 | **brainstorming** | Explores ideas with brutal honesty and multi-approach analysis |
+| 3 | **planning** | Creates execution plans with beads, tracks, and dependencies |
+| 4 | **file-beads** | Converts plans into structured Beads issues |
+| 5 | **orchestrator** | Spawns parallel worker agents and monitors progress |
+| 6 | **worker** | Executes beads within assigned tracks using Agent Mail |
 | 7 | **issue-resolution** | Handles bugs that arise during execution |
+| 8 | **knowledge** | Extracts learnings from threads and updates documentation |
 
 ---
 
