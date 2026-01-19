@@ -30,7 +30,6 @@ Start coding smarter: <https://vibecodecheap.com/>
 
 ---
 
-
 ## Skills
 
 | Skill | Description |
@@ -104,7 +103,8 @@ bd init --no-db
 
 #### 2️⃣ Initialize Documentation (New Project)
 
-For new projects, use `docs-init` to generate initial documentation:
+Start Amp.
+For brownfield projects, use `docs-init` to generate initial documentation:
 
 ```
 Use docs-init skill to initialize documentation for this project
@@ -146,6 +146,7 @@ Use orchestrator skill to execute the feature according to the plan
 > 💡 **Tip**: Use **Rush mode** to save tokens, or **Smart mode** for tighter control
 
 The orchestrator will:
+
 - Coordinate workers in parallel or sequential execution
 - Track progress and handle dependencies automatically
 
@@ -218,24 +219,28 @@ uv venv --python python3.14
 source .venv/bin/activate
 
 # Install
-uv pip install -e .
+uv sync
+
 ```
 
 **Global Setup** (choose one):
 
 *Option 1: Symlink (recommended)*
+
 ```bash
 sudo ln -sf $(pwd)/.venv/bin/am /usr/local/bin/am
 sudo ln -sf $(pwd)/.venv/bin/mcp-agent-mail /usr/local/bin/mcp-agent-mail
 ```
 
 *Option 2: Add to PATH*
+
 ```bash
 echo "export PATH=\"$(pwd)/.venv/bin:\$PATH\"" >> ~/.zshrc
 source ~/.zshrc
 ```
 
 **Verify**:
+
 ```bash
 am --help
 am health_check '{}'
@@ -253,31 +258,37 @@ For full CLI documentation, see [CLI_INSTALLATION.md](https://github.com/tuong-n
 <summary><strong>📦 Installation</strong></summary>
 
 **Linux/macOS/FreeBSD:**
+
 ```bash
 curl -fsSL https://raw.githubusercontent.com/steveyegge/beads/main/scripts/install.sh | bash
 ```
 
 **npm:**
+
 ```bash
 npm install -g @beads/bd
 ```
 
 **Homebrew:**
+
 ```bash
 brew install steveyegge/beads/bd
 ```
 
 **Go:**
+
 ```bash
 go install github.com/steveyegge/beads/cmd/bd@latest
 ```
 
 **Initialize** (run once per project):
+
 ```bash
 bd init --no-db --skip-hooks --skip-merge-driver
 ```
 
 **Verify**:
+
 ```bash
 bd --help
 bd list
@@ -293,16 +304,19 @@ bd list
 <summary><strong>📦 Installation</strong></summary>
 
 **Linux/macOS:**
+
 ```bash
 curl -fsSL "https://raw.githubusercontent.com/Dicklesworthstone/beads_viewer/main/install.sh?$(date +%s)" | bash
 ```
 
 **Windows (PowerShell):**
+
 ```powershell
 irm "https://raw.githubusercontent.com/Dicklesworthstone/beads_viewer/main/install.ps1" | iex
 ```
 
 **Verify**:
+
 ```bash
 bv --help
 bv --robot-triage
@@ -319,11 +333,11 @@ bv --robot-triage
 
 1. Sign up at [exa.ai](https://exa.ai/) and get API key from dashboard
 
-2. Add to Amp's MCP config (`~/.config/amp/mcp.json`):
+2. Add to Amp's MCP config (`~/.config/amp/settings.json`):
 
 ```json
 {
-  "mcpServers": {
+  "amp.mcpServers": {
     "exa": {
       "type": "stdio",
       "command": "npx",
